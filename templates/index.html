@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />/* asd */
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+  <title>Weather App</title>
+
+  <style>
+    form {
+      margin: 30px auto;
+      width: 90% !important;
+    }
+
+    form h2 {
+      margin: 20px 0px 30px 0px;
+    }
+
+    form input,
+    label {
+      margin: 5px 0px;
+    }
+
+    .container {
+      width: 90% !important;
+    }
+
+    .info {
+      display: flex;
+    }
+
+    :root {
+      --xpos: 20px;
+    }
+
+    .moved-image {
+      margin-left: var(--xpos);
+    }
+  </style>
+</head>
+
+<body>
+  <form class="container" method="post">
+    <h2><i class="bi bi-cloud-haze"></i>국가자격증 시험일정</h2>
+
+    <div class="form-group">
+      <label>자격증 이름</label>
+      <input type="text" class="form-control" placeholder="자격증 이름" name="name" />
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary" id="search-button">Search Now</button>
+  </form>
+
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card text-dark bg-white mb-3" style="max-width: 40rem">
+          <div class="card-body">
+            <h1 class="card-title">{{ city_name }}</h1>
+            <div class="info">
+              <div class="right">
+                <h3 class="card-text">필기 원서접수 시작일자:{{ temp }}</h3>
+                <h4 class="card-text">{{ weather }}</h4>
+              </div>
+              <div class="left">
+                &nbsp;&nbsp;
+                <img src="http://openweathermap.org/img/w/{{icon}}.png" alt="" />
+              </div>
+            </div>
+            <br />
+            <h5>필기시험 시작일자 : {{docExamStartDt}}</h5>
+            <h5>필기시험 합격자 발표 : {{docPassDt}}</h5>
+            <button id="back-button" onclick=""> ◀ </button>
+            <button id="move-button" onclick=""> ▶ </button>
+            <button id="register-button" onclick="led_on()" style="display:none;"> 접수하기 </button>
+            <h5 id="reg-comp" style="display:none;"> 접수되었습니다. </h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <img class="moved-image" src="{{url_for('static',filename='css/images/man2.jpg')}}" alt="" />
+
+  <script>
+    const moveButton = document.getElementById('move-button');
+    const movedImage = document.querySelector('.moved-image');
+    const backButton = document.getElementById('back-button');
+    const backImage = document.querySelector('.moved-image');
+    const registerButton = document.getElementById('register-button');
+    const regcomp = document.getElementById('reg-comp');
+    let movexpos = 20;
+    let backxpos = 70;
+    count = 0
+
+    moveButton.addEventListener('click', () => {
+      count++;
+      if (count > 15) {
+        count = 15;
+        registerButton.style.display = 'block';
+      }
+      if (0 < count && count < 15) {
+        movexpos += 50;
+        document.documentElement.style.setProperty('--xpos', movexpos + 'px');
+        if (count % 2 == 0) {
+          movedImage.src = "{{url_for('static',filename='css/images/man2.jpg')}}";
+
+        }
+        else {
+          movedImage.src = "{{url_for('static',filename='css/images/run2.jpg')}}";
+        }
+      }
+    });
+
+    backButton.addEventListener('click', () => {
+      count--;
+      if (count < 0) {
+        count = 0;
+      }
+      if (0 < count && count < 15) {
+        movexpos -= 50;
+        document.documentElement.style.setProperty('--xpos', movexpos + 'px');
+        if (count % 2 == 0) {
+          movedImage.src = "{{url_for('static',filename='css/images/backman.jpg')}}";
+        }
+        else {
+          movedImage.src = "{{url_for('static',filename='css/images/backrun.jpg')}}";
+        }
+      }
+    });
+    registerButton.addEventListener('click', () => {
+      regcomp.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
